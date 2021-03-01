@@ -1,6 +1,6 @@
 Package: RJcluster
 Title: RJ Clustering Algorithm
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     c(person(given = "Rachael",
            family = "Shudde",
@@ -19,17 +19,17 @@ License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
 Imports: Rcpp (>= 1.0.2), matrixStats, infotheo, rlang, stats,
-        graphics, profvis, mclust, doParallel, foreach, parallel
+        graphics, profvis, mclust, foreach
 LinkingTo: Rcpp, RcppArmadillo
 Suggests: testthat (>= 2.1.0), knitr, rmarkdown
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Depends: R (>= 2.10)
 NeedsCompilation: yes
-Packaged: 2020-09-15 18:02:51 UTC; rachaelshudde
+Packaged: 2021-03-01 19:45:33 UTC; rachaelshudde
 Author: Rachael Shudde [aut, cre],
   Shahina Rahman [aut],
   Valen Johnson [aut]
 Maintainer: Rachael Shudde <rachael.shudde@gmail.com>
 Repository: CRAN
-Date/Publication: 2020-09-23 08:00:06 UTC
+Date/Publication: 2021-03-01 20:20:02 UTC

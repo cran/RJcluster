@@ -1,6 +1,6 @@
-3b8f230c1d47675272da1489c6d9a03a *DESCRIPTION
+6e04bd09ddb4c9a4b1824397cc9b6fed *DESCRIPTION
 267c22f4997e3b755ec5366fed398aac *NAMESPACE
-fceecc71f3231e8a1865cd3812045b25 *R/AlgorithmImplementation.R
+76417778a63e12b3fdd1578dd4989b1c *R/AlgorithmImplementation.R
 cbc5a40eb66e019b935b5c7731fd17f6 *R/DATA_generate_test_data.R
 b6241ac6703736ebd8095626bd2f7e4b *R/FUNC_AMI_calculations.R
 6ddfe0fecab634a64b9d2d500cb5b7ed *R/RcppExports.R
@@ -9,7 +9,7 @@ b6241ac6703736ebd8095626bd2f7e4b *R/FUNC_AMI_calculations.R
 02fa18217974461b69dbc35ac115a830 *build/vignette.rds
 b1e1aaeb1c669a2e69032c488d41bccc *inst/doc/RJclust_Vignette.R
 231baa14eb6c0568d22ffd2ce80f3e20 *inst/doc/RJclust_Vignette.Rmd
-be4a777dcdbe900b2667acc1a15b83c1 *inst/doc/RJclust_Vignette.pdf
+c9a851db3914479196d60b1c2bd54562 *inst/doc/RJclust_Vignette.pdf
 f9ec5405b5f1281c1a68b50277355a2a *man/RJclust.Rd
 c876501b9997412f03d625a60e3986b9 *man/f_rez.Rd
 e4233883d86dc640cc967f94f6806dea *man/generateSimulationData.Rd
