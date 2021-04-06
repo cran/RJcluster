@@ -72,6 +72,209 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_gamma_labels_c
+Rcpp::List get_gamma_labels_c(const arma::mat z, const int C);
+RcppExport SEXP _RJcluster_get_gamma_labels_c(SEXP zSEXP, SEXP CSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat >::type z(zSEXP);
+    Rcpp::traits::input_parameter< const int >::type C(CSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_gamma_labels_c(z, C));
+    return rcpp_result_gen;
+END_RCPP
+}
+// step_two_c
+Rcpp::List step_two_c(const int C, const Rcpp::List gamma, const arma::mat GG);
+RcppExport SEXP _RJcluster_step_two_c(SEXP CSEXP, SEXP gammaSEXP, SEXP GGSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int >::type C(CSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type GG(GGSEXP);
+    rcpp_result_gen = Rcpp::wrap(step_two_c(C, gamma, GG));
+    return rcpp_result_gen;
+END_RCPP
+}
+// step_three_c
+Rcpp::List step_three_c(const int C, const Rcpp::List gamma, const arma::mat GG, const arma::mat mean_off, const arma::vec mean_diag);
+RcppExport SEXP _RJcluster_step_three_c(SEXP CSEXP, SEXP gammaSEXP, SEXP GGSEXP, SEXP mean_offSEXP, SEXP mean_diagSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int >::type C(CSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type GG(GGSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type mean_off(mean_offSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type mean_diag(mean_diagSEXP);
+    rcpp_result_gen = Rcpp::wrap(step_three_c(C, gamma, GG, mean_off, mean_diag));
+    return rcpp_result_gen;
+END_RCPP
+}
+// step_four_c
+Rcpp::List step_four_c(const int C, const Rcpp::List gamma, const arma::mat GG, const arma::mat mean_off, const arma::vec mean_diag);
+RcppExport SEXP _RJcluster_step_four_c(SEXP CSEXP, SEXP gammaSEXP, SEXP GGSEXP, SEXP mean_offSEXP, SEXP mean_diagSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int >::type C(CSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type GG(GGSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type mean_off(mean_offSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type mean_diag(mean_diagSEXP);
+    rcpp_result_gen = Rcpp::wrap(step_four_c(C, gamma, GG, mean_off, mean_diag));
+    return rcpp_result_gen;
+END_RCPP
+}
+// step_five_c
+Rcpp::List step_five_c(const int C, const Rcpp::List gamma, const arma::mat ss_off, const arma::vec ss_diag, arma::vec labels, arma::cube sss, arma::mat ss_bound, const int N);
+RcppExport SEXP _RJcluster_step_five_c(SEXP CSEXP, SEXP gammaSEXP, SEXP ss_offSEXP, SEXP ss_diagSEXP, SEXP labelsSEXP, SEXP sssSEXP, SEXP ss_boundSEXP, SEXP NSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int >::type C(CSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type ss_off(ss_offSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type ss_diag(ss_diagSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type labels(labelsSEXP);
+    Rcpp::traits::input_parameter< arma::cube >::type sss(sssSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type ss_bound(ss_boundSEXP);
+    Rcpp::traits::input_parameter< const int >::type N(NSEXP);
+    rcpp_result_gen = Rcpp::wrap(step_five_c(C, gamma, ss_off, ss_diag, labels, sss, ss_bound, N));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_gamma_c
+Rcpp::List get_gamma_c(arma::vec class_values, const int K);
+RcppExport SEXP _RJcluster_get_gamma_c(SEXP class_valuesSEXP, SEXP KSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type class_values(class_valuesSEXP);
+    Rcpp::traits::input_parameter< const int >::type K(KSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_gamma_c(class_values, K));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_mean_values_c
+Rcpp::List get_mean_values_c(const int K, const Rcpp::List gamma, const arma::mat GG);
+RcppExport SEXP _RJcluster_get_mean_values_c(SEXP KSEXP, SEXP gammaSEXP, SEXP GGSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int >::type K(KSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type GG(GGSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_mean_values_c(K, gamma, GG));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_mu_c
+arma::mat get_mu_c(arma::vec labels, const Rcpp::List gamma, const arma::mat GG_new, const int N, const int K, arma::mat mean_off, arma::vec mean_diag);
+RcppExport SEXP _RJcluster_get_mu_c(SEXP labelsSEXP, SEXP gammaSEXP, SEXP GG_newSEXP, SEXP NSEXP, SEXP KSEXP, SEXP mean_offSEXP, SEXP mean_diagSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type labels(labelsSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::List >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type GG_new(GG_newSEXP);
+    Rcpp::traits::input_parameter< const int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< const int >::type K(KSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type mean_off(mean_offSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type mean_diag(mean_diagSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_mu_c(labels, gamma, GG_new, N, K, mean_off, mean_diag));
+    return rcpp_result_gen;
+END_RCPP
+}
+// dmvnrm_arma_old
+arma::vec dmvnrm_arma_old(arma::mat x, arma::rowvec mean, arma::mat sigma, bool logd);
+RcppExport SEXP _RJcluster_dmvnrm_arma_old(SEXP xSEXP, SEXP meanSEXP, SEXP sigmaSEXP, SEXP logdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::rowvec >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< bool >::type logd(logdSEXP);
+    rcpp_result_gen = Rcpp::wrap(dmvnrm_arma_old(x, mean, sigma, logd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// dmvnrm_arma
+arma::vec dmvnrm_arma(arma::mat const& x, arma::rowvec const& mean, arma::mat const& sigma, bool const logd);
+RcppExport SEXP _RJcluster_dmvnrm_arma(SEXP xSEXP, SEXP meanSEXP, SEXP sigmaSEXP, SEXP logdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat const& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::rowvec const& >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< arma::mat const& >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< bool const >::type logd(logdSEXP);
+    rcpp_result_gen = Rcpp::wrap(dmvnrm_arma(x, mean, sigma, logd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// dmvnrm_arma_fast
+arma::vec dmvnrm_arma_fast(arma::mat const& x, arma::rowvec const& mean, arma::mat const& sigma, bool const logd);
+RcppExport SEXP _RJcluster_dmvnrm_arma_fast(SEXP xSEXP, SEXP meanSEXP, SEXP sigmaSEXP, SEXP logdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat const& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::rowvec const& >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< arma::mat const& >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< bool const >::type logd(logdSEXP);
+    rcpp_result_gen = Rcpp::wrap(dmvnrm_arma_fast(x, mean, sigma, logd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// loglik_G_c
+float loglik_G_c(const arma::mat y, const arma::vec prob, const arma::mat mu, const arma::cube Sigma, const int C, const int N);
+RcppExport SEXP _RJcluster_loglik_G_c(SEXP ySEXP, SEXP probSEXP, SEXP muSEXP, SEXP SigmaSEXP, SEXP CSEXP, SEXP NSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type prob(probSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< const arma::cube >::type Sigma(SigmaSEXP);
+    Rcpp::traits::input_parameter< const int >::type C(CSEXP);
+    Rcpp::traits::input_parameter< const int >::type N(NSEXP);
+    rcpp_result_gen = Rcpp::wrap(loglik_G_c(y, prob, mu, Sigma, C, N));
+    return rcpp_result_gen;
+END_RCPP
+}
+// weights_multi_c
+arma::vec weights_multi_c(const arma::vec x, const arma::vec prob, const arma::mat mu, const arma::cube Sigma, const int C);
+RcppExport SEXP _RJcluster_weights_multi_c(SEXP xSEXP, SEXP probSEXP, SEXP muSEXP, SEXP SigmaSEXP, SEXP CSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type prob(probSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< const arma::cube >::type Sigma(SigmaSEXP);
+    Rcpp::traits::input_parameter< const int >::type C(CSEXP);
+    rcpp_result_gen = Rcpp::wrap(weights_multi_c(x, prob, mu, Sigma, C));
+    return rcpp_result_gen;
+END_RCPP
+}
+// weights_multi_matrix_c
+arma::mat weights_multi_matrix_c(const arma::mat y, const arma::vec prob, const arma::mat mu, const arma::cube Sigma, const int C);
+RcppExport SEXP _RJcluster_weights_multi_matrix_c(SEXP ySEXP, SEXP probSEXP, SEXP muSEXP, SEXP SigmaSEXP, SEXP CSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type prob(probSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< const arma::cube >::type Sigma(SigmaSEXP);
+    Rcpp::traits::input_parameter< const int >::type C(CSEXP);
+    rcpp_result_gen = Rcpp::wrap(weights_multi_matrix_c(y, prob, mu, Sigma, C));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tcrossprod_c
 arma::mat tcrossprod_c(const arma::mat& X, const arma::mat& Y);
 RcppExport SEXP _RJcluster_tcrossprod_c(SEXP XSEXP, SEXP YSEXP) {
@@ -146,6 +349,20 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RJcluster_getMatrixMeans_c", (DL_FUNC) &_RJcluster_getMatrixMeans_c, 3},
     {"_RJcluster_assignGroups_c", (DL_FUNC) &_RJcluster_assignGroups_c, 4},
     {"_RJcluster_getFinalMeans_c", (DL_FUNC) &_RJcluster_getFinalMeans_c, 3},
+    {"_RJcluster_get_gamma_labels_c", (DL_FUNC) &_RJcluster_get_gamma_labels_c, 2},
+    {"_RJcluster_step_two_c", (DL_FUNC) &_RJcluster_step_two_c, 3},
+    {"_RJcluster_step_three_c", (DL_FUNC) &_RJcluster_step_three_c, 5},
+    {"_RJcluster_step_four_c", (DL_FUNC) &_RJcluster_step_four_c, 5},
+    {"_RJcluster_step_five_c", (DL_FUNC) &_RJcluster_step_five_c, 8},
+    {"_RJcluster_get_gamma_c", (DL_FUNC) &_RJcluster_get_gamma_c, 2},
+    {"_RJcluster_get_mean_values_c", (DL_FUNC) &_RJcluster_get_mean_values_c, 3},
+    {"_RJcluster_get_mu_c", (DL_FUNC) &_RJcluster_get_mu_c, 7},
+    {"_RJcluster_dmvnrm_arma_old", (DL_FUNC) &_RJcluster_dmvnrm_arma_old, 4},
+    {"_RJcluster_dmvnrm_arma", (DL_FUNC) &_RJcluster_dmvnrm_arma, 4},
+    {"_RJcluster_dmvnrm_arma_fast", (DL_FUNC) &_RJcluster_dmvnrm_arma_fast, 4},
+    {"_RJcluster_loglik_G_c", (DL_FUNC) &_RJcluster_loglik_G_c, 6},
+    {"_RJcluster_weights_multi_c", (DL_FUNC) &_RJcluster_weights_multi_c, 5},
+    {"_RJcluster_weights_multi_matrix_c", (DL_FUNC) &_RJcluster_weights_multi_matrix_c, 5},
     {"_RJcluster_tcrossprod_c", (DL_FUNC) &_RJcluster_tcrossprod_c, 2},
     {"_RJcluster_scale_c", (DL_FUNC) &_RJcluster_scale_c, 2},
     {"_RJcluster_rcpparma_hello_world", (DL_FUNC) &_RJcluster_rcpparma_hello_world, 0},

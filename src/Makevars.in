@@ -8,17 +8,13 @@
 ## And with R 3.4.0, and RcppArmadillo 0.7.960.*, we turn C++11 on as OpenMP
 ## support within Armadillo prefers / requires it
 CXX_STD = CXX11
-##PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) -I../inst/include
-PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) -I. -lz
-
-PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
-## PKG_CPPFLAGS = 
-
+PKG_CXXFLAGS = @OPENMP_FLAG@ -I../inst/include
+PKG_LIBS= @OPENMP_FLAG@ $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
 ## -*- mode: makefile; -*-
 
-## PKG_CXXFLAGS = -I../inst/include -I. $(SHLIB_OPENMP_CXXFLAGS) 
-## PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+##PKG_CXXFLAGS = -I../inst/include @OPENMP_FLAG@
+##PKG_LIBS= @OPENMP_FLAG@ $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
 ## With R 3.1.0 or later, you can uncomment the following line to tell R to 
 ## enable compilation with C++11 (where available)
@@ -29,7 +25,7 @@ PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 ##
 ## And with R 3.4.0, and RcppArmadillo 0.7.960.*, we turn C++11 on as OpenMP
 ## support within Armadillo prefers / requires it
-## CXX_STD = CXX11
+##CXX_STD = CXX11
 
 ## Armadillo itself use the following define which we also set
 ## automatically if we see USE_CXX1X defined; outside of a package it
@@ -39,9 +35,6 @@ PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 ## or via 
 ##    #define ARMA_USE_CXX11 
 ## before RcppArmadillo.h is included
-
-
-
 ## With R 3.1.0 or later, you can uncomment the following line to tell R to
 ## enable compilation with C++11 (where available)
 ##
@@ -52,6 +45,5 @@ PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 ## And with R 3.4.0, and RcppArmadillo 0.7.960.*, we turn C++11 on as OpenMP
 ## support within Armadillo prefers / requires it
 ## CXX_STD = CXX11
-## PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) -I../inst/include
-## PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
-
+## PKG_CXXFLAGS = @OPENMP_FLAG@ -I../inst/include
+## PKG_LIBS= @OPENMP_FLAG@ $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)

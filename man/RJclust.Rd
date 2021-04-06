@@ -4,23 +4,62 @@
 \alias{RJclust}
 \title{RJclust}
 \usage{
-RJclust(X, num_cut = NULL, seed = 1)
+RJclust(
+  data,
+  penalty = "bic",
+  C_max = 10,
+  criterion = "VVI",
+  n_bins = NULL,
+  seed = 1,
+  verbose = FALSE
+)
 }
 \arguments{
-\item{X}{Data input}
+\item{data}{Data input, must be in matrix form. Currently no support for missing values}
 
-\item{num_cut}{Number of cuts for RJ algorithm (suggested sqrt(p))}
+\item{penalty}{A string of possible vectors. Options include: "bic", "aic", "full_covariance", "mclust" (default = "bic")}
+
+\item{C_max}{Maximum number of clusters to look for (default is 10)}
+
+\item{criterion}{Model of covariance structure (default = "VVI")}
+
+\item{n_bins}{Number of cuts if penalty = "scale" for the scaled RJ algorithm (default = sqrt(p))}
 
 \item{seed}{Seed (defalt = 1)}
+
+\item{verbose}{Should progress be printed? (default = FALSE)}
 }
 \value{
-Returns RJ algorithm result
+Returns RJ algorithm result for "aic", "bic" ("mclust" and "scale" will return an mclust object: \tabular{ll}{
+   \code{K} \tab number of clusters found \cr
+   \tab \cr
+   \code{class} \tab Class labels \cr
+   \tab \cr
+   \code{penalty} \tab Penalty values at each iteraiton \cr
+   \tab \cr
+   \code{mean} \tab Mean matrix \cr
+   \tab \cr
+   \code{prob} \tab Probability values \cr
+   \tab \cr
+   \code{z} \tab Z values from mclust (NULL penalty = "full_covariance") \cr
+}
 }
 \description{
-RJclust
+This is a clustering algorithm for data where p << n. There are are four different types of penalty methods that can be used, depending
+on the size of the data and the accuracy. The first is the default method: the BIC penalty. There is also the AIC penalty, and full covariance. 
+The full covariance method takes longer, but may give a more accurate implementation. Finally, there is also the mclust implementation, 
+but that is not not recommended For all  methods, a C_max variable is needed that is an upper limit on the possible 
+number of clusters.
+}
+\details{
+All implementation except the mclust and full covariance method use C++ to increase runtime. 
+
+model_names controls the type of covariance structure. See \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5096736/}{Mclust Documenttion} 
+for more information. Note criterion "kmeans" is the same as "EEI". It is not suggested to use "kmeans" if it is suspected the classes
+are imbalanced
 }
 \examples{
-X = generateSimulationData()
+X = simulate_HD_data()
 X = X$X
-clust = RJclust(X)
+clust = RJclust(X, penalty = "bic", C_max = 10)
 }

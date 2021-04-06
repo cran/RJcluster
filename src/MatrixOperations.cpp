@@ -12,8 +12,8 @@ arma::mat tcrossprod_c(const arma::mat& X, const arma::mat& Y)
 // [[Rcpp::export]]
 arma::mat scale_c(const arma::mat& X, bool medians = false)
 {
-  int p = X.n_cols;
-  int n = X.n_rows;
+  arma::uword p = X.n_cols;
+  arma::uword n = X.n_rows;
 
   // get medians or mean
   arma::mat scaleValue = arma::mean(X, 0);
@@ -23,7 +23,7 @@ arma::mat scale_c(const arma::mat& X, bool medians = false)
   }
 
   arma::mat colMeans(n,p);
-  for (int i = 0; i < n; i++)
+  for (arma::uword i = 0; i < n; i++)
   {
     colMeans.row(i) = scaleValue;
   }

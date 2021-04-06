@@ -1,69 +1,69 @@
-cleanFindCC = function( temp )
+cleanFindCC = function(temp)
 {
-  for ( i in 1:length( temp ) )
+  for (i in 1:length(temp))
   {
     temp[[i]] = temp[[i]][, 1]
   }
 
-  return( temp )
+  return(temp)
 }
 
 
 ### STEP 1
 # initial clustering
-initialClustering = function( X, num_cut, seed = 1 )
+initialClustering = function(X, n_bins, seed = 1)
 {
   # get dimensions
-  p = ncol( X )
-  N = nrow( X )
+  p = ncol(X)
+  N = nrow(X)
 
   # sample data
-  set.seed( seed )
-  fold_ids = sample( rep( seq_len( num_cut ), length.out = N ) )
+  set.seed(seed)
+  fold_ids = sample(rep(seq_len(n_bins), length.out = N))
 
   # if not doing parallel: d is the number of clusters, CC is an empty list
   CC = list() # if not doing parallel
 
   # get clusters in each cut
-  for (i in 1:num_cut) 
+  for (i in 1:n_bins) 
   {
     # get relevent indices
-    temp_index = which( fold_ids == i ) # get the index
+    temp_index = which(fold_ids == i) # get the index
     Z1 = X[temp_index, ]
 
     # get scaled cross product
-    GG1 = tcrossprod( Z1 ) / p
+    GG1 = tcrossprod(Z1) / p
 
     # remove the diagonal and add as a new column at the end
-    gg_wodiag = GG1 - diag( diag( GG1 ) )
-    cut = length( temp_index ) - 1
-    GG_new = cbind( gg_wodiag + diag( colSums( gg_wodiag ) / ( cut-1 ) ), diag( GG1 ) )
+    gg_wodiag = GG1 - diag(diag(GG1))
+    cut = length(temp_index) - 1
+    GG_new = cbind(gg_wodiag + diag(colSums(gg_wodiag) / (cut - 1)), diag(GG1))
 
     # calling actual clustering
-    MclustGG1 = Mclust( GG_new, modelNames = "VVI", verbose = F )
+    MclustGG1 = Mclust(GG_new, modelNames = "VVI", verbose = F)
 
     # if not doing parallel
-    CC_i = getCCmatrix_c( MclustGG1$classification, temp_index, MclustGG1$G )
-    CC_i = cleanFindCC( CC_i )
-    CC = c( CC, CC_i )
+    CC_i = getCCmatrix_c(MclustGG1$classification, temp_index, MclustGG1$G)
+    CC_i = cleanFindCC(CC_i)
+    CC = c(CC, CC_i)
   }
 
-  return( CC = CC )
+  return(CC = CC)
 }
 # 
 # # initial clustering
-# initialClusteringparallel = function( X, num_cut, seed = 1 )
+# initialClusteringparallel = function(X, n_bins, seed = 1)
 # {
 #   # get dimensions
-#   p = ncol( X )
-#   N = nrow( X )
+#   p = ncol(X)
+#   N = nrow(X)
 #   
 #   # sample data
-#   set.seed( seed )
-#   fold_ids = sample( rep( seq_len( num_cut ), length.out = N ) )
+#   set.seed(seed)
+#   fold_ids = sample(rep(seq_len(n_bins), length.out = N))
 #   
 #   # register parallel session with total number of cores - 2
-#   # doParallel::registerDoParallel( cores = parallel::detectCores() - 2 )
+#   # doParallel::registerDoParallel(cores = parallel::detectCores() - 2)
 #   
 #   chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
 #   
@@ -78,200 +78,284 @@ initialClustering = function( X, num_cut, seed = 1 )
 #   cl = parallel::makeCluster(num_workers)
 #   doParallel::registerDoParallel(cl)
 #   
-#   CC_loop <- foreach( i = 1:num_cut, .combine='c', .multicombine=TRUE, .packages = c( "mclust" ) ) %dopar% 
+#   CC_loop <- foreach(i = 1:n_bins, .combine='c', .multicombine=TRUE, .packages = c("mclust")) %dopar% 
 #   {
 #     # get relevent indices
-#     temp_index = which( fold_ids == i ) # get the index
+#     temp_index = which(fold_ids == i) # get the index
 #     Z1 = X[temp_index, ]
 #     
 #     # get scaled cross product
-#     GG1 = tcrossprod( Z1 ) / p
+#     GG1 = tcrossprod(Z1) / p
 #     
 #     # remove the diagonal and add as a new column at the end
-#     gg_wodiag = GG1 - diag( diag( GG1 ) )
-#     cut = length( temp_index ) - 1
-#     GG_new = cbind( gg_wodiag + diag( colSums( gg_wodiag ) / ( cut-1 ) ), diag( GG1 ) )
+#     gg_wodiag = GG1 - diag(diag(GG1))
+#     cut = length(temp_index) - 1
+#     GG_new = cbind(gg_wodiag + diag(colSums(gg_wodiag) / (cut-1)), diag(GG1))
 #     
 #     # calling actual clustering
-#     MclustGG1 = Mclust( GG_new, modelNames = "VVI", verbose = F )
-#     return_information = list( MclustGG1$classification, temp_index, MclustGG1$G )
+#     MclustGG1 = Mclust(GG_new, modelNames = "VVI", verbose = F)
+#     return_information = list(MclustGG1$classification, temp_index, MclustGG1$G)
 #   }
 #   
 #   parallel::stopCluster(cl)
 #   
 #   CC = list()
-#   for ( i in seq( 1, length( CC_loop ), 3 ) )
+#   for (i in seq(1, length(CC_loop), 3))
 #   {
-#     CC_i = getCCmatrix_c( CC_loop[[ i ]], CC_loop[[ i + 1 ]], CC_loop[[ i + 2 ]] )
-#     CC_i = cleanFindCC( CC_i )
+#     CC_i = getCCmatrix_c(CC_loop[[ i ]], CC_loop[[ i + 1 ]], CC_loop[[ i + 2 ]])
+#     CC_i = cleanFindCC(CC_i)
 # 
-#     CC = c( CC, CC_i )
+#     CC = c(CC, CC_i)
 #   }
 #   
-#   return( CC = CC )
+#   return(CC = CC)
 # }
 
 ### step 2
 # get the matrix of means and return them
-getMeansMatrix = function( X, CC )
+getMeansMatrix = function(X, CC)
 {
-  d = length( CC )
-  p = ncol( X )
+  d = length(CC)
+  p = ncol(X)
 
-  Cmeans = matrix( 0, nrow = d, ncol = p )
+  Cmeans = matrix(0, nrow = d, ncol = p)
   # get matrix of means
-  Cmeans = getMatrixMeans_c( CC, X, d )
+  Cmeans = getMatrixMeans_c(CC, X, d)
 
-  return( Cmeans )
+  return(Cmeans)
 }
 
 
 ### step 3
-secondClustering = function( Cmeans )
+secondClustering = function(Cmeans)
 {
   # get dimensions
-  n = nrow( Cmeans )
-  p = ncol( Cmeans )
+  n = nrow(Cmeans)
+  p = ncol(Cmeans)
 
   # reset for notational match with original code
   ZZ = Cmeans
 
   # getting ZZ'
-  GG = tcrossprod( ZZ ) / p
+  GG = tcrossprod(ZZ) / p
 
   # set up new matrix for RJ algorithm
   gg = GG
-  gg_wodiag = gg - diag( diag( gg ) )
-  gg_wdiag = cbind( gg_wodiag, diag( gg ) )
-  GG_new = cbind( gg_wodiag + diag( colSums( gg_wodiag ) / ( n-1 ) ), diag( gg ) )
+  gg_wodiag = gg - diag(diag(gg))
+  # gg_wdiag = cbind(gg_wodiag, diag(gg))
+  GG_new = cbind(gg_wodiag + diag(colSums(gg_wodiag) / (n - 1)), diag(gg))
 
   # do second clustering
-  Clust.J = Mclust( GG_new, modelNames = "VVI", verbose = F )
+  Clust.J = Mclust(GG_new, modelNames = "VVI", verbose = F)
 
-  return( Clust.J )
+  return(Clust.J)
 }
 
 ### step 4 - assign each data point a group
-assignGroups = function( N, G, classification, CC )
+assignGroups = function(N, G, classification, CC)
 {
-  Group = assignGroups_c( N, G, classification, CC )
-  return( Group[,1] )
+  Group = assignGroups_c(N, G, classification, CC)
+  return(Group[,1])
 }
 
 ### step 5 - final clustering
-finalClustering = function( G, Group, X )
+finalClustering = function(G, Group, X)
 {
-  N = nrow( X )
-  p = ncol( X )
+  # N = nrow(X)
+  p = ncol(X)
 
-  Lmark = getFinalMeans_c( G, Group, X )
+  Lmark = getFinalMeans_c(G, Group, X)
 
-  LL = tcrossprod( X, Lmark ) / p
+  LL = tcrossprod(X, Lmark) / p
 
-  newRJ = Mclust( LL, modelNames = "VVI", G, verbose = F )
+  newRJ = Mclust(LL, modelNames = "VVI", G, verbose = F)
 
-  return( newRJ )
+  return(newRJ)
 }
 
 
 ## Actual function called by user if RJ scale
-RJclust_backend = function( X, num_cut, seed = seed )
+RJclust_backend = function(X, n_bins, seed = seed)
 {
   # 1- initia lclustering of cuts of matrix
-  # CC = initialClusteringparallel( X, num_cut, seed = seed )
-  CC = initialClustering( X, num_cut, seed = seed )
+  # CC = initialClusteringparallel(X, n_bins, seed = seed)
+  CC = initialClustering(X, n_bins, seed = seed)
   
   # 2- get first dxp matrix of means
-  Cmeans = getMeansMatrix( X, CC )
+  Cmeans = getMeansMatrix(X, CC)
 
   # 3- get second clustering based on means
-  clustering = secondClustering( Cmeans )
+  clustering = secondClustering(Cmeans)
 
   # 4 - assign each data point a group
-  G = as.numeric( clustering[6] )
+  G = as.numeric(clustering[6])
   # classification = clustering[14] # from original code, but should be 15 - classification index
   classification = clustering[15] # this is the classification
-  classification = as.vector( unlist( classification[1] ) )
+  classification = as.vector(unlist(classification[1]))
   
-  Group = assignGroups( nrow( X ), G, classification, CC )
+  Group = assignGroups(nrow(X), G, classification, CC)
 
   # 5 - final clustering
-  RJ  = finalClustering( G, Group, X )
+  RJ  = finalClustering(G, Group, X)
 
-  return( RJ )
+  return(RJ)
 }
 
 
 # RJ function with no scaling
-RJclust_noscale = function( Z, seed = 1 )
+RJclust_noscale_mnist = function(Z, seed = 1)
 {
-  set.seed( seed )
-  p_temp = ncol( Z )
-  n_temp = nrow( Z )
+  set.seed(seed)
+  p_temp = ncol(Z)
+  n_temp = nrow(Z)
   
   # RJ steps
-  gg = tcrossprod( Z )/p_temp
-  gg_wodiag = gg - diag( diag( gg ) )
-  # gg_wdiag = cbind( gg_wodiag, diag( gg ) )
-  GG_new = cbind( gg_wodiag + diag( colSums( gg_wodiag ) / ( n_temp - 1 ) ), diag( gg ) )
+  gg = tcrossprod(Z)/p_temp
+  gg_wodiag = gg - diag(diag(gg))
+  # gg_wdiag = cbind(gg_wodiag, diag(gg))
+  GG_new = cbind(gg_wodiag + diag(colSums(gg_wodiag) / (n_temp - 1)), diag(gg))
   
-  # par( mfrow = c( 1,1 ) )
-  # image( rotate( GG_new ), col = gray.colors( 33 ) )
+  # par(mfrow = c(1,1))
+  # image(rotate(GG_new), col = gray.colors(33))
   
-  step_one_clust = Mclust( GG_new, verbose = FALSE, G = 10 )
-  return( step_one_clust )
+  step_one_clust = Mclust(GG_new, verbose = FALSE, G = 10)
+  
+  return(step_one_clust)
 }
 
+# For large \eqn{n}, the scale method can be used, which uses the approximation method of RJclust. For the scale method,a parmater n_bins (usually \eqn{\sqrt(p)}) is required that splits the data into different buckets. 
 
 #' RJclust
 #'
-#' @param X Data input 
-#' @param num_cut Number of cuts for RJ algorithm (suggested sqrt(p))
+#' This is a clustering algorithm for data where p << n. There are are four different types of penalty methods that can be used, depending
+#' on the size of the data and the accuracy. The first is the default method: the BIC penalty. There is also the AIC penalty, and full covariance. 
+#' The full covariance method takes longer, but may give a more accurate implementation. Finally, there is also the mclust implementation, 
+#' but that is not not recommended For all  methods, a C_max variable is needed that is an upper limit on the possible 
+#' number of clusters. 
+#' 
+#' All implementation except the mclust and full covariance method use C++ to increase runtime. 
+#' 
+#' model_names controls the type of covariance structure. See \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5096736/}{Mclust Documenttion} 
+#' for more information. Note criterion "kmeans" is the same as "EEI". It is not suggested to use "kmeans" if it is suspected the classes
+#' are imbalanced
+#' 
+#' @param data Data input, must be in matrix form. Currently no support for missing values 
+#' @param penalty A string of possible vectors. Options include: "bic", "aic", "full_covariance", "mclust" (default = "bic")
+#' @param C_max Maximum number of clusters to look for (default is 10)
+#' @param criterion Model of covariance structure (default = "VVI")
+#' @param n_bins Number of cuts if penalty = "scale" for the scaled RJ algorithm (default = sqrt(p))
 #' @param seed Seed (defalt = 1)
+#' @param verbose Should progress be printed? (default = FALSE)
 #'
-#' @return Returns RJ algorithm result
+#' @return Returns RJ algorithm result for "aic", "bic" ("mclust" and "scale" will return an mclust object: \tabular{ll}{
+#'    \code{K} \tab number of clusters found \cr
+#'    \tab \cr
+#'    \code{class} \tab Class labels \cr
+#'    \tab \cr
+#'    \code{penalty} \tab Penalty values at each iteraiton \cr
+#'    \tab \cr
+#'    \code{mean} \tab Mean matrix \cr
+#'    \tab \cr
+#'    \code{prob} \tab Probability values \cr
+#'    \tab \cr
+#'    \code{z} \tab Z values from mclust (NULL penalty = "full_covariance") \cr
+#' }
 #' @export
 #'
 #' @examples
-#' X = generateSimulationData()
+#' X = simulate_HD_data()
 #' X = X$X
-#' clust = RJclust(X)
-RJclust = function( X, num_cut = NULL, seed = 1 )
+#' clust = RJclust(X, penalty = "bic", C_max = 10)
+RJclust = function(data, penalty = "bic", C_max = 10, criterion = "VVI", n_bins = NULL, seed = 1, verbose = FALSE)
 {
-  # check that data is a matrix
-  if ( !is.matrix( X ) )
+  possible_model_names = c("EII", "VII", "EEI", "VEI", "EVI", "VVI", "EEE", "EVE", "VEE", "VVE", "EEV", "VEV", "EVV", "VVV", "kmeans")
+  model_names = criterion
+  
+  if (!(model_names %in% possible_model_names))
   {
-    stop( "Data must be in a matrix form" )
+    stop("Criterion must be one of the following: \"EII\", \"VII\", \"EEI\", \"VEI\", \"EVI\", \"VVI\", \"EEE\", 
+          \"EVE\", \"VEE\", \"VVE\", \"EEV\", \"VEV\", \"EVV\", \"VVV\", \"kmeans\")")
   }
 
-  # check that num_cut is not too big, assuming it was not null
-  if ( !is.null( num_cut ) )
+  if (model_names == "kmeans")
   {
-    if ( num_cut >= nrow( X ) )
-    {
-      stop( "num_cut must be < n" )
-    }
-    
-    if ( num_cut >= nrow( X ) / 4 )
-    {
-      warning( "RJclust will preform beter with a num_cut that divides the data into larger chunks" )
-    }
-  }
-
-  if ( is.null( num_cut ) & nrow( X ) > 5000 )
-  {
-    warning( "RJclust will preform better with the scaled version, try passing in a num_cut value")
+    model_names = "EII"
   }
   
-  # if there is a num_cut indicated, run RJ_scale, otherwise run with no scale
-  if ( !is.null( num_cut ) )
+  possible_penalty = c("bic", "aic", "full_covariance", "mclust")
+  if (!(penalty %in% possible_penalty))
   {
-    to_return = RJclust_backend( X, num_cut, seed ) 
-  } else {
-    to_return = RJclust_noscale( X, seed )
+    stop("Criterion must be one of the following: \"aic\", \"bic\", \"full_covariance\", \"mclust\"")
+  }
+  
+  X = data
+  # first check method: Options are bic (default), aic, full covariance, mclust, and scale
+  penalty = tolower(penalty)
+  possibilities = c("bic", "aic", "full_covariance", "mclust", "scale")
+  if (!(penalty %in% possibilities))
+  {
+    warning("No valid value for method given. Defaulting to bic. Possiblities are: (\"bic\", \"aic\", 
+    \"full_covariance\", \"mclust\", \"scale\")")
+  }
+  
+  # check that data is a matrix
+  if (!is.matrix(X))
+  {
+    stop("Data must be in a matrix form")
+  }
+  
+  if (nrow(X) >= ncol(X))
+  {
+    warning("In this case, n > p. This algorithm is designed for an input matrix w here n < p and may not perform as expected when n > p.")
+  }
+
+  # check that n_bins is not too big, assuming it was not null
+  if (!is.null(n_bins) & (penalty == "scale"))
+  {
+    if (n_bins >= nrow(X))
+    {
+      stop("n_bins must be < n")
+    }
+    
+    if (n_bins >= nrow(X) / 4)
+    {
+      warning("RJclust will preform beter with a n_bins that divides the data into larger chunks")
+    }
+  }
+
+  if (!(penalty == "scale") & nrow(X) > 1000)
+  {
+    warning("RJclust will preform better with the scaled version, try passing in a n_bins value and setting scale = TRUE")
+  }
+  
+  # if there is a n_bins indicated, run RJ_scale, otherwise run with no scale
+  if (penalty == "scale")
+  {
+    if (is.null(n_bins))
+    {
+      n_bins = floor(sqrt(ncol(X)))
+      warning("No n_bins value provided, using sqrt(p)")
+    }
+    to_return = RJclust_backend(X, n_bins, seed) 
+  } else if (penalty == "aic") {
+    to_return = RJclust_aic_bic(X, C_max = C_max, use_bic = FALSE, use_aic = TRUE, modelNames = model_names, verbose = verbose)
+  } else if (penalty == "mclust")
+  {
+    to_return = RJclust_noscale_mnist(X, seed)
+  } else if (penalty == "full_covariance")
+  {
+    to_return = RJclust_fullcovariance(Z = X, C_max = C_max, iter_max = 1000, verbose = verbose)
+  } else
+  {
+    to_return = RJclust_aic_bic(X, C_max = C_max, use_bic = TRUE, use_aic = FALSE, modelNames = model_names, verbose = verbose)
   }
   # run RJ algorithm
-  return( to_return )
+  return(to_return)
 }
+
+
+# default RJclust - bic 
+# backup - RJclust_BIC full model (this is what I have been working on)
+# another way: use mclust
 
 
