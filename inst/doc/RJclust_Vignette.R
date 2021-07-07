@@ -17,13 +17,12 @@ print(dim(high_unbalanced$X))
 
 
 ## -----------------------------------------------------------------------------
-res_high_balanced_bic = RJclust(data = high_balanced$X)
-res_low_balanced_bic = RJclust(data = low_balanced$X)
-res_high_unbalanced_bic = RJclust(data = high_unbalanced$X)
+res_high_balanced = RJclust(data = high_balanced$X)
+res_low_balanced = RJclust(data = low_balanced$X)
+res_high_unbalanced = RJclust(data = high_unbalanced$X)
 
-results = list(res_high_balanced_bic, res_low_balanced_bic, res_high_unbalanced_bic)
+results = list(res_high_balanced, res_low_balanced, res_high_unbalanced)
 data = list(high_balanced, low_balanced, high_unbalanced, high_balanced, low_balanced, high_unbalanced)
-
 
 ## -----------------------------------------------------------------------------
 for (i in 1:length(results))

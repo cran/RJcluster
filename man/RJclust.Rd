@@ -6,7 +6,7 @@
 \usage{
 RJclust(
   data,
-  penalty = "bic",
+  penalty = "hockey_stick",
   C_max = 10,
   criterion = "VVI",
   n_bins = NULL,
@@ -45,14 +45,15 @@ Returns RJ algorithm result for "aic", "bic" ("mclust" and "scale" will return a
 }
 }
 \description{
-This is a clustering algorithm for data where p << n. There are are four different types of penalty methods that can be used, depending
-on the size of the data and the accuracy. The first is the default method: the BIC penalty. There is also the AIC penalty, and full covariance. 
-The full covariance method takes longer, but may give a more accurate implementation. Finally, there is also the mclust implementation, 
-but that is not not recommended For all  methods, a C_max variable is needed that is an upper limit on the possible 
+This is a high dimensional clustering algorithm for data in matrix form. There are are four different types of penalty methods that can be used, 
+depending on the size of the data and the desired accuracy. The first is the default method: the hokey stick penalty. There is also the BIC penalty, 
+and full covariance. The full covariance method takes longer, but may give a more accurate implementation.For large \eqn{n}, the scale method can be used, 
+which uses the approximation method of RJclust. For the scale method,a parmater n_bins (usually \eqn{\sqrt(p)}) is required that splits the data into different buckets. 
+For all  methods, a C_max variable is needed that is an upper limit on the possible 
 number of clusters.
 }
 \details{
-All implementation except the mclust and full covariance method use C++ to increase runtime. 
+All implementations use backend C++ to increase runtime. 
 
 model_names controls the type of covariance structure. See \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5096736/}{Mclust Documenttion} 
 for more information. Note criterion "kmeans" is the same as "EEI". It is not suggested to use "kmeans" if it is suspected the classes
@@ -61,5 +62,5 @@ are imbalanced
 \examples{
 X = simulate_HD_data()
 X = X$X
-clust = RJclust(X, penalty = "bic", C_max = 10)
+clust = RJclust(X, penalty = "hockey_stick", C_max = 10)
 }

@@ -203,7 +203,7 @@ RJclust_backend = function(X, n_bins, seed = seed)
 
 
 # RJ function with no scaling
-RJclust_noscale_mnist = function(Z, seed = 1)
+RJclust_noscale_mnist = function(Z, G_mclust = 10, seed = 1)
 {
   set.seed(seed)
   p_temp = ncol(Z)
@@ -218,7 +218,7 @@ RJclust_noscale_mnist = function(Z, seed = 1)
   # par(mfrow = c(1,1))
   # image(rotate(GG_new), col = gray.colors(33))
   
-  step_one_clust = Mclust(GG_new, verbose = FALSE, G = 10)
+  step_one_clust = Mclust(GG_new, G = G_mclust, verbose = FALSE)
   
   return(step_one_clust)
 }
@@ -227,13 +227,14 @@ RJclust_noscale_mnist = function(Z, seed = 1)
 
 #' RJclust
 #'
-#' This is a clustering algorithm for data where p << n. There are are four different types of penalty methods that can be used, depending
-#' on the size of the data and the accuracy. The first is the default method: the BIC penalty. There is also the AIC penalty, and full covariance. 
-#' The full covariance method takes longer, but may give a more accurate implementation. Finally, there is also the mclust implementation, 
-#' but that is not not recommended For all  methods, a C_max variable is needed that is an upper limit on the possible 
+#' This is a high dimensional clustering algorithm for data in matrix form. There are are four different types of penalty methods that can be used, 
+#' depending on the size of the data and the desired accuracy. The first is the default method: the hokey stick penalty. There is also the BIC penalty, 
+#' and full covariance. The full covariance method takes longer, but may give a more accurate implementation.For large \eqn{n}, the scale method can be used, 
+#' which uses the approximation method of RJclust. For the scale method,a parmater n_bins (usually \eqn{\sqrt(p)}) is required that splits the data into different buckets. 
+#' For all  methods, a C_max variable is needed that is an upper limit on the possible 
 #' number of clusters. 
 #' 
-#' All implementation except the mclust and full covariance method use C++ to increase runtime. 
+#' All implementations use backend C++ to increase runtime. 
 #' 
 #' model_names controls the type of covariance structure. See \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5096736/}{Mclust Documenttion} 
 #' for more information. Note criterion "kmeans" is the same as "EEI". It is not suggested to use "kmeans" if it is suspected the classes
@@ -265,8 +266,8 @@ RJclust_noscale_mnist = function(Z, seed = 1)
 #' @examples
 #' X = simulate_HD_data()
 #' X = X$X
-#' clust = RJclust(X, penalty = "bic", C_max = 10)
-RJclust = function(data, penalty = "bic", C_max = 10, criterion = "VVI", n_bins = NULL, seed = 1, verbose = FALSE)
+#' clust = RJclust(X, penalty = "hockey_stick", C_max = 10)
+RJclust = function(data, penalty = "hockey_stick", C_max = 10, criterion = "VVI", n_bins = NULL, seed = 1, verbose = FALSE)
 {
   possible_model_names = c("EII", "VII", "EEI", "VEI", "EVI", "VVI", "EEE", "EVE", "VEE", "VVE", "EEV", "VEV", "EVV", "VVV", "kmeans")
   model_names = criterion
@@ -282,31 +283,20 @@ RJclust = function(data, penalty = "bic", C_max = 10, criterion = "VVI", n_bins 
     model_names = "EII"
   }
   
-  possible_penalty = c("bic", "aic", "full_covariance", "mclust")
-  if (!(penalty %in% possible_penalty))
-  {
-    stop("Criterion must be one of the following: \"aic\", \"bic\", \"full_covariance\", \"mclust\"")
-  }
-  
   X = data
   # first check method: Options are bic (default), aic, full covariance, mclust, and scale
   penalty = tolower(penalty)
-  possibilities = c("bic", "aic", "full_covariance", "mclust", "scale")
+  possibilities = c("bic", "hockey_stick", "scale", "full_covariance")
   if (!(penalty %in% possibilities))
   {
-    warning("No valid value for method given. Defaulting to bic. Possiblities are: (\"bic\", \"aic\", 
-    \"full_covariance\", \"mclust\", \"scale\")")
+    warning("No valid value for method given. Defaulting to hockey_stick Possiblities are: (\"bic\", \"hockey_stick\", 
+    \"scale\", \"full_covariance\")")
   }
   
   # check that data is a matrix
   if (!is.matrix(X))
   {
     stop("Data must be in a matrix form")
-  }
-  
-  if (nrow(X) >= ncol(X))
-  {
-    warning("In this case, n > p. This algorithm is designed for an input matrix w here n < p and may not perform as expected when n > p.")
   }
 
   # check that n_bins is not too big, assuming it was not null
@@ -319,7 +309,7 @@ RJclust = function(data, penalty = "bic", C_max = 10, criterion = "VVI", n_bins 
     
     if (n_bins >= nrow(X) / 4)
     {
-      warning("RJclust will preform beter with a n_bins that divides the data into larger chunks")
+      warning("RJclust will preform better with a n_bins that divides the data into larger chunks")
     }
   }
 
@@ -337,17 +327,17 @@ RJclust = function(data, penalty = "bic", C_max = 10, criterion = "VVI", n_bins 
       warning("No n_bins value provided, using sqrt(p)")
     }
     to_return = RJclust_backend(X, n_bins, seed) 
-  } else if (penalty == "aic") {
+  } else if (penalty == "bic") {
     to_return = RJclust_aic_bic(X, C_max = C_max, use_bic = FALSE, use_aic = TRUE, modelNames = model_names, verbose = verbose)
-  } else if (penalty == "mclust")
+  } else if (penalty == "hockey_stick")
   {
-    to_return = RJclust_noscale_mnist(X, seed)
+    to_return = RJ_hockey_stick(X, C_max = C_max, modelNames = model_names, verbose = verbose, seed = seed)
   } else if (penalty == "full_covariance")
   {
     to_return = RJclust_fullcovariance(Z = X, C_max = C_max, iter_max = 1000, verbose = verbose)
   } else
   {
-    to_return = RJclust_aic_bic(X, C_max = C_max, use_bic = TRUE, use_aic = FALSE, modelNames = model_names, verbose = verbose)
+    to_return = paste("No valid penalty provided. Please check the documentation for possibilities")
   }
   # run RJ algorithm
   return(to_return)

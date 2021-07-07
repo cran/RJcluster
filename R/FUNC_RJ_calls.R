@@ -1,4 +1,51 @@
-#  default RJ clust
+# default 
+# RJ_hockey_stick = function(X, kmax)
+RJ_hockey_stick = function(X, C_max = 10, modelNames = "VVI", verbose = FALSE, seed = 1)
+{
+
+  N = nrow(X)
+  p = ncol(X)
+  GG =  tcrossprod(X, X)/p
+  gg_wodiag =  GG - diag(diag(GG))
+  GG_new = cbind(gg_wodiag + diag(colSums(gg_wodiag)/(N - 1)), diag(GG))
+  Gclust  =  Mclust(GG_new, modelNames = "VVI", G = 1, verbose = verbose)
+  M1 = Gclust$parameters$mean  #N by 1 matrix
+  RJMean1 =  RJ_mean(1, Gclust$class, GG, t(M1))
+  W1 = vector(length = C_max - 1)
+
+  # find all possiblities 
+  for (i in 2:C_max)
+  {
+    Gclust = Mclust(GG_new, G = i, modelNames = modelNames, verbose = verbose)
+    RJMean = RJ_mean(i, Gclust$class, GG, RJMean1)
+    W1[i - 1] = kmeans(RJMean, centers = RJMean1, iter.max = 1000, algorithm = "Lloyd")$tot.withinss
+    RJMean1 =  RJMean
+  }
+
+  W = W1 + (2:C_max) * (N + 1)/(p)
+  K_hat =   which.min(W)
+  GG_W =   Mclust(GG_new, modelNames = "VVI", G = K_hat , verbose = verbose)
+  
+  to_return = list(K = K_hat, class = GG_W$classification, penalty = W, mclust_object = GG_W)
+  
+  return(to_return)
+}
+
+# updated bic penalty for July 2021
+RJ_bic = function(X, C_max, modelNames = "VVI", verbose = FALSE){
+  
+  N = nrow(X)
+  p = ncol(X)
+  GG = tcrossprod(X, X)/p
+  gg_wodiag =  GG - diag(diag(GG))
+  GG_new =  cbind(gg_wodiag + diag(colSums(gg_wodiag)/(N - 1)), diag(GG))
+  Gclust =  Mclust(GG_new, modelNames = modelNames, verbose = verbose, G = 1:C_max)
+  
+  to_return = list(class = Gclust$classification, K = Gclust$G, penalty = Gclust$BIC, mclust_object = Gclust)
+  return(to_return)
+}
+
+#  old default RJ clust from April 2021 package
 #  if use_bic == FALSE then aic is the default
 RJclust_aic_bic = function(X, C_max = 10, use_bic = TRUE, use_aic = FALSE, modelNames = "VVI", verbose = FALSE)
 {
@@ -15,6 +62,12 @@ RJclust_aic_bic = function(X, C_max = 10, use_bic = TRUE, use_aic = FALSE, model
   GG = tcrossprod(X, X)/p
   gg_wodiag =  GG - diag(diag(GG))
   GG_new = cbind(gg_wodiag + diag(colSums(gg_wodiag)/(N - 1)), diag(GG))
+  
+  # initial clustering 
+  # Gclust =  Mclust(GG_new, modelNames = modelNames, G = 1, verbose = F)
+  # M1 = Gclust$parameters$mean  #N by 1 matrix
+  # RJMean1 = RJ_mean(1, Gclust$class, GG)
+  # W1 = NULL
   
   aic = vector(length = C_max)
   bic = vector(length = C_max)
