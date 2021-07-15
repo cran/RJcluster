@@ -32,8 +32,9 @@ RJ_hockey_stick = function(X, C_max = 10, modelNames = "VVI", verbose = FALSE, s
 }
 
 # updated bic penalty for July 2021
-RJ_bic = function(X, C_max, modelNames = "VVI", verbose = FALSE){
-  
+RJ_bic = function(X, C_max, modelNames = "VVI", verbose = FALSE, seed = 1)
+{
+  set.seed(1)
   N = nrow(X)
   p = ncol(X)
   GG = tcrossprod(X, X)/p

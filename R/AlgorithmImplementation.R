@@ -328,7 +328,7 @@ RJclust = function(data, penalty = "hockey_stick", C_max = 10, criterion = "VVI"
     }
     to_return = RJclust_backend(X, n_bins, seed) 
   } else if (penalty == "bic") {
-    to_return = RJclust_aic_bic(X, C_max = C_max, use_bic = FALSE, use_aic = TRUE, modelNames = model_names, verbose = verbose)
+    to_return = RJ_bic(X, C_max = C_max,modelNames = model_names, verbose = verbose)
   } else if (penalty == "hockey_stick")
   {
     to_return = RJ_hockey_stick(X, C_max = C_max, modelNames = model_names, verbose = verbose, seed = seed)
