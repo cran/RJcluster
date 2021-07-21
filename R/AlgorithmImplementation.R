@@ -227,10 +227,10 @@ RJclust_noscale_mnist = function(Z, G_mclust = 10, seed = 1)
 
 #' RJclust
 #'
-#' This is a high dimensional clustering algorithm for data in matrix form. There are are four different types of penalty methods that can be used, 
-#' depending on the size of the data and the desired accuracy. The first is the default method: the hokey stick penalty. There is also the BIC penalty, 
-#' and full covariance. The full covariance method takes longer, but may give a more accurate implementation.For large \eqn{n}, the scale method can be used, 
-#' which uses the approximation method of RJclust. For the scale method,a parmater n_bins (usually \eqn{\sqrt(p)}) is required that splits the data into different buckets. 
+#' This is a high dimensional clustering algorithm for data in matrix form. There are are two different types of penalty methods that can be used, 
+#' depending on the size of the data and the desired accuracy. The first is the default method: the hokey stick penalty. There is also the BIC penalty.
+#' For large \eqn{n}, the scale method can be used,  which uses the approximation method of RJclust. For the scaleRJ method,
+#' a parmater n_bins (usually \eqn{\sqrt(p)}) is required that splits the data into different buckets. 
 #' For all  methods, a C_max variable is needed that is an upper limit on the possible 
 #' number of clusters. 
 #' 
@@ -241,7 +241,8 @@ RJclust_noscale_mnist = function(Z, G_mclust = 10, seed = 1)
 #' are imbalanced
 #' 
 #' @param data Data input, must be in matrix form. Currently no support for missing values 
-#' @param penalty A string of possible vectors. Options include: "bic", "aic", "full_covariance", "mclust" (default = "bic")
+#' @param penalty A string of possible vectors. Options include: "bic" an "hockey_stock" (default = "hockey_stick")
+#' @param scaleRJ Should the scaled version of RJ be used, suggested for data where n > 1000 (default = FALSE)
 #' @param C_max Maximum number of clusters to look for (default is 10)
 #' @param criterion Model of covariance structure (default = "VVI")
 #' @param n_bins Number of cuts if penalty = "scale" for the scaled RJ algorithm (default = sqrt(p))
@@ -267,8 +268,11 @@ RJclust_noscale_mnist = function(Z, G_mclust = 10, seed = 1)
 #' X = simulate_HD_data()
 #' X = X$X
 #' clust = RJclust(X, penalty = "hockey_stick", C_max = 10)
-RJclust = function(data, penalty = "hockey_stick", C_max = 10, criterion = "VVI", n_bins = NULL, seed = 1, verbose = FALSE)
+RJclust = function(data, penalty = "hockey_stick", scaleRJ = FALSE, C_max = 10, criterion = "VVI", n_bins = NULL, seed = 1, verbose = FALSE)
 {
+  
+  warning("RJclust assumes that data is centered and scaled. Use the scale() function if your data is not already normalized")
+  
   possible_model_names = c("EII", "VII", "EEI", "VEI", "EVI", "VVI", "EEE", "EVE", "VEE", "VVE", "EEV", "VEV", "EVV", "VVV", "kmeans")
   model_names = criterion
   
@@ -286,11 +290,10 @@ RJclust = function(data, penalty = "hockey_stick", C_max = 10, criterion = "VVI"
   X = data
   # first check method: Options are bic (default), aic, full covariance, mclust, and scale
   penalty = tolower(penalty)
-  possibilities = c("bic", "hockey_stick", "scale", "full_covariance")
+  possibilities = c("bic", "hockey_stick")
   if (!(penalty %in% possibilities))
   {
-    warning("No valid value for method given. Defaulting to hockey_stick Possiblities are: (\"bic\", \"hockey_stick\", 
-    \"scale\", \"full_covariance\")")
+    warning("No valid value for method given. Defaulting to hockey_stick Possiblities are: (\"bic\", \"hockey_stick\")")
   }
   
   # check that data is a matrix
@@ -313,28 +316,46 @@ RJclust = function(data, penalty = "hockey_stick", C_max = 10, criterion = "VVI"
     }
   }
 
-  if (!(penalty == "scale") & nrow(X) > 1000)
+  if (!scaleRJ & nrow(X) > 1000)
   {
     warning("RJclust will preform better with the scaled version, try passing in a n_bins value and setting scale = TRUE")
   }
   
+  # if (scale)
+  # {
+  #   # if the data has all positive data, take the log and center/scale
+  #   if (min(X) > 0)
+  #   {
+  #     temp = log(X)
+  #     X = scale(temp)
+  #   } else {
+  #     X = scale(X)
+  #   }
+  # }
+  
   # if there is a n_bins indicated, run RJ_scale, otherwise run with no scale
-  if (penalty == "scale")
+  if (scaleRJ)
   {
     if (is.null(n_bins))
     {
       n_bins = floor(sqrt(ncol(X)))
       warning("No n_bins value provided, using sqrt(p)")
     }
+    if (penalty == "bic")
+    {
+      a = 1
+    } else if (penalty == "hockey_stick")
+    {
+      a = 2
+    }
     to_return = RJclust_backend(X, n_bins, seed) 
-  } else if (penalty == "bic") {
+  } 
+  
+  if (penalty == "bic") {
     to_return = RJ_bic(X, C_max = C_max,modelNames = model_names, verbose = verbose)
   } else if (penalty == "hockey_stick")
   {
     to_return = RJ_hockey_stick(X, C_max = C_max, modelNames = model_names, verbose = verbose, seed = seed)
-  } else if (penalty == "full_covariance")
-  {
-    to_return = RJclust_fullcovariance(Z = X, C_max = C_max, iter_max = 1000, verbose = verbose)
   } else
   {
     to_return = paste("No valid penalty provided. Please check the documentation for possibilities")

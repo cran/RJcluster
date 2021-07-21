@@ -13,8 +13,8 @@
   \tabular{ll}{
     Package: \tab RJcluster\cr
     Type: \tab Package\cr
-    Version: \tab 2.5.1\cr
-    Date: \tab 04-08-2021\cr
+    Version: \tab 3.1.0\cr
+    Date: \tab 07-15-2021\cr
     License: \tab GPL>=2\cr
   }
 }

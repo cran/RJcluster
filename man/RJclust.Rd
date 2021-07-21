@@ -7,6 +7,7 @@
 RJclust(
   data,
   penalty = "hockey_stick",
+  scaleRJ = FALSE,
   C_max = 10,
   criterion = "VVI",
   n_bins = NULL,
@@ -17,7 +18,9 @@ RJclust(
 \arguments{
 \item{data}{Data input, must be in matrix form. Currently no support for missing values}
 
-\item{penalty}{A string of possible vectors. Options include: "bic", "aic", "full_covariance", "mclust" (default = "bic")}
+\item{penalty}{A string of possible vectors. Options include: "bic" an "hockey_stock" (default = "hockey_stick")}
+
+\item{scaleRJ}{Should the scaled version of RJ be used, suggested for data where n > 1000 (default = FALSE)}
 
 \item{C_max}{Maximum number of clusters to look for (default is 10)}
 
@@ -45,10 +48,10 @@ Returns RJ algorithm result for "aic", "bic" ("mclust" and "scale" will return a
 }
 }
 \description{
-This is a high dimensional clustering algorithm for data in matrix form. There are are four different types of penalty methods that can be used, 
-depending on the size of the data and the desired accuracy. The first is the default method: the hokey stick penalty. There is also the BIC penalty, 
-and full covariance. The full covariance method takes longer, but may give a more accurate implementation.For large \eqn{n}, the scale method can be used, 
-which uses the approximation method of RJclust. For the scale method,a parmater n_bins (usually \eqn{\sqrt(p)}) is required that splits the data into different buckets. 
+This is a high dimensional clustering algorithm for data in matrix form. There are are two different types of penalty methods that can be used, 
+depending on the size of the data and the desired accuracy. The first is the default method: the hokey stick penalty. There is also the BIC penalty.
+For large \eqn{n}, the scale method can be used,  which uses the approximation method of RJclust. For the scaleRJ method,
+a parmater n_bins (usually \eqn{\sqrt(p)}) is required that splits the data into different buckets. 
 For all  methods, a C_max variable is needed that is an upper limit on the possible 
 number of clusters.
 }
