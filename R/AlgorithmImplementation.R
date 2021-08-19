@@ -271,7 +271,7 @@ RJclust_noscale_mnist = function(Z, G_mclust = 10, seed = 1)
 RJclust = function(data, penalty = "hockey_stick", scaleRJ = FALSE, C_max = 10, criterion = "VVI", n_bins = NULL, seed = 1, verbose = FALSE)
 {
   
-  warning("RJclust assumes that data is centered and scaled. Use the scale() function if your data is not already normalized")
+  print("NOTE: RJclust assumes that data is centered and scaled. Use the scale() function if your data is not already normalized")
   
   possible_model_names = c("EII", "VII", "EEI", "VEI", "EVI", "VVI", "EEE", "EVE", "VEE", "VVE", "EEV", "VEV", "EVV", "VVV", "kmeans")
   model_names = criterion
