@@ -303,16 +303,23 @@ RJclust = function(data, penalty = "hockey_stick", scaleRJ = FALSE, C_max = 10, 
   }
 
   # check that n_bins is not too big, assuming it was not null
-  if (!is.null(n_bins) & (penalty == "scale"))
+  if (scaleRJ)
   {
-    if (n_bins >= nrow(X))
-    {
-      stop("n_bins must be < n")
-    }
     
-    if (n_bins >= nrow(X) / 4)
+    if (is.null(n_bins))
     {
-      warning("RJclust will preform better with a n_bins that divides the data into larger chunks")
+      n_bins = floor(sqrt(ncol(X)))
+      warning("No n_bins value provided, using sqrt(p)")
+    } else {
+      if (n_bins >= nrow(X))
+      {
+        stop("n_bins must be < n")
+      }
+      
+      if (n_bins >= nrow(X) / 4)
+      {
+        warning("RJclust will preform better with a n_bins that divides the data into larger chunks")
+      }
     }
   }
 
@@ -334,32 +341,27 @@ RJclust = function(data, penalty = "hockey_stick", scaleRJ = FALSE, C_max = 10, 
   # }
   
   # if there is a n_bins indicated, run RJ_scale, otherwise run with no scale
-  if (scaleRJ)
-  {
-    if (is.null(n_bins))
-    {
-      n_bins = floor(sqrt(ncol(X)))
-      warning("No n_bins value provided, using sqrt(p)")
-    }
-    if (penalty == "bic")
-    {
-      a = 1
-    } else if (penalty == "hockey_stick")
-    {
-      a = 2
-    }
-    to_return = RJclust_backend(X, n_bins, seed) 
-  } 
   
-  if (penalty == "bic") {
-    to_return = RJ_bic(X, C_max = C_max,modelNames = model_names, verbose = verbose)
-  } else if (penalty == "hockey_stick")
+  if (penalty == "bic") 
   {
-    to_return = RJ_hockey_stick(X, C_max = C_max, modelNames = model_names, verbose = verbose, seed = seed)
+    if (!scaleRJ)
+    {
+      to_return = RJ_bic(X, C_max = C_max,modelNames = model_names, verbose = verbose)
+    } else {
+      to_return = RJ_bic_scale(X, num_cut = n_bins, C_max = C_max)
+    }
+  } else if (penalty == "hockey_stick") {
+    if (!scaleRJ)
+    {
+      to_return = RJ_hockey_stick(X, C_max = C_max,modelNames = model_names, verbose = verbose)
+    } else {
+      to_return = RJ_hockey_stick_scale(X, num_cut = n_bins, C_max = C_max)
+    }
   } else
   {
-    to_return = paste("No valid penalty provided. Please check the documentation for possibilities")
+    to_return = paste("No valid value for penalty provided. Please check the documentation for possibilities")
   }
+  
   # run RJ algorithm
   return(to_return)
 }
