@@ -32,7 +32,7 @@ RJ_hockey_stick_scale = function(X, num_cut, C_max = 10, seed = 1)
   # Z = X # unnecessary copy
   ZZ = getMatrixMeans_c(CC, X, d) # old C.means
   
-  rj_Cmeans = RJ_hockey_stick(ZZ, min(d,10))
+  rj_Cmeans = RJ_hockey_stick(ZZ, min(d, C_max))
   K0 = rj_Cmeans$K
   
   ## C++ implemntaiton
