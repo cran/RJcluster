@@ -1,4 +1,4 @@
-b9065811358027aa562b0fac898fd96c *DESCRIPTION
+031a2b9d2acaec6683338c1830df0e12 *DESCRIPTION
 e4190763890136693c7371419c5a6dec *NAMESPACE
 8c8b06465b01a1db84a8a3f36441fc37 *R/AlgorithmImplementation.R
 ea04e5c261bc81337c3292af2b613061 *R/DATA_generate_test_data.R
@@ -11,16 +11,16 @@ e9d6f778db9e6fe57518f706982b16fa *R/FUNC_bic_RJclust.R
 399b1920728427488ec3f598da96acb4 *R/RcppExports.R
 63f3821bb05785c515fe2f9a24cfe431 *R/WrapperFunctions.R
 8b380ab96ec23a5dab6308376f0cac75 *R/old_RJmean.R
-1468aff8befd5ec1e46d227c0d31fdfb *R/zzz.R
+fb589c3744bbe7c77f7ad63a138a19d8 *R/zzz.R
 0a513d712e0231d311a8acea123ba2db *README.md
-779bf4320a00df4058d0bbbadf4cb857 *build/partial.rdb
+eb522e79e5c1802e88745cab29cd9f08 *build/partial.rdb
 02fa18217974461b69dbc35ac115a830 *build/vignette.rds
 56f01e7dcd011ebfd8e87d3cb6759002 *cleanup
 b78303a45ca48b45dfd5910c1f257c21 *configure
 f56230b38ea5fbb518d2c6dde5352a0f *configure.ac
 96e18750382fdda58d82adfde55334d4 *inst/doc/RJclust_Vignette.R
 56c706e416ac6ff9b18aca1468420c6a *inst/doc/RJclust_Vignette.Rmd
-ba1b86bf6cf95f3a534102f35258e79e *inst/doc/RJclust_Vignette.pdf
+3414dd308f73ae5b723842af43268a1d *inst/doc/RJclust_Vignette.pdf
 3cbac3277ad10f100841471175f210c2 *man/Mutual_Information.Rd
 4822bc1ea4131b09d8fb25f4a495445d *man/RJclust.Rd
 3711a336984101937b92e8a64719ebdc *man/RJcluster-package.Rd

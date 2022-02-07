@@ -1,7 +1,7 @@
 Package: RJcluster
 Title: A Fast Clustering Algorithm for High Dimensional Data Based on
         the Gram Matrix Decomposition
-Version: 3.2.2
+Version: 3.2.3
 Authors@R: 
     c(person(given = "Shahina",
            family = "Rahman",
@@ -34,6 +34,6 @@ RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Depends: R (>= 2.10)
 NeedsCompilation: yes
-Packaged: 2021-09-03 18:17:37 UTC; rachaelshudde
+Packaged: 2022-02-07 20:16:42 UTC; rachaelshudde
 Repository: CRAN
-Date/Publication: 2021-09-03 21:30:12 UTC
+Date/Publication: 2022-02-07 21:00:06 UTC
