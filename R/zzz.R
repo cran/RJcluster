@@ -7,8 +7,8 @@ RJclusterStartupMessage <- function()
 {
   # Startup message obtained as
   # > figlet -f slant RJcluster
-  # msg <- c(paste("version", utils::packageVersion("RJcluster")), "\nType 'citation(\"RJcluster\")' for citing this R package in publications")
-  msg <- paste("Package 'RJcluster' version", utils::packageVersion("RJcluster"), "is no longer supported and has migrated to GMcluster. Please run install.packages('GMcluster')")
+  msg <- c(paste("version", utils::packageVersion("RJcluster")), "\nType 'citation(\"RJcluster\")' for citing this R package in publications")
+  # msg <- paste("Package 'RJcluster' version", utils::packageVersion("RJcluster"), "is no longer supported and has migrated to GMcluster. Please run install.packages('GMcluster')")
   
   return(msg)
 }
